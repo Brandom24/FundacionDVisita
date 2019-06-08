@@ -1,0 +1,74 @@
+<!-- <ion-header no-border>
+  <ion-toolbar>
+    <ion-title>clientes-Lista</ion-title>
+  </ion-toolbar> -->
+
+  <!-- <ion-searchbar clearIcon="clear-icon" animated placeholder="Direccion" (ionChange)="buscar($event)"></ion-searchbar> -->
+<!-- </ion-header> -->
+
+<ion-content>
+
+    <ion-item>
+      <ion-label>Estado:</ion-label>
+      <ion-select placeholder="Estado.." interface="popover" (ionChange)="selectState($event)">
+        <ion-select-option *ngFor="let item of state" [value]="item">{{item.name}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+        <ion-label>Municipio:</ion-label>
+        <ion-select placeholder="Municipio.." interface="popover" (ionChange)="selectMunicipio($event)">
+          <ion-select-option *ngFor="let item of jsonMuni">{{item.name}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-list #lista>
+      <ion-item-sliding *ngFor="let item of clientes">
+      <ion-item class="item_lista">
+      <ion-label>
+              <h6>Estado: {{item.state ? item.state: ''}}</h6>
+              <h3>Colonia: {{item.colony ? item.colony: ''}}</h3>
+      </ion-label>
+      <ion-button *ngIf="item.status === 'PENDIENTE'" class="btn_ver" fill="outline" slot="end" (click)="direccion(item)">
+          Ver Direccion
+          <ion-icon slot="icon-only" slot="end" name="globe"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="item.status === 'EN PROCESO'" class="btn_ver" fill="outline" slot="end" (click)="seguimiento(item)">
+          Seguimiento
+      </ion-button>
+    </ion-item>
+  </ion-item-sliding>
+  </ion-list>
+
+  <ion-list *ngIf="loading">
+      <ion-item *ngFor="let item of [1,1,1,1,1,1,1,1,1,1]"
+                class="animated flash slow infinite">
+        <ion-label>
+          <h3>
+            <ion-skeleton-text width="30%"></ion-skeleton-text>
+          </h3>
+          <h3>
+              <ion-skeleton-text width="100%"></ion-skeleton-text>
+          </h3>
+          <p>
+              <ion-skeleton-text width="100%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+        <ion-label slot="end" text-right>
+            <ion-skeleton-text width="50%"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+  </ion-list>
+
+  <!-- <div text-center *ngIf="clientes">
+    <ion-chip color="secondary">
+      <ion-label color="dark">No se encontró ninguna vivienda dentro de esos parámetros.</ion-label>
+    </ion-chip>
+  </div> -->
+
+  <div text-center *ngIf="resCode">
+    <ion-chip color="secondary">
+      <ion-label color="dark">No se encontró ninguna vivienda registrada dentro de esos parámetros.</ion-label>
+    </ion-chip>
+  </div>
+
+</ion-content>
