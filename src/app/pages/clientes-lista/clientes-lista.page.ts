@@ -74,14 +74,14 @@ export class ClientesListaPage implements OnInit {
     this._store.address_St = null;
     this.dataClient.setUser(user);
     this.dataClient.operationID = user.operationId;
-    this.navCtrl.navigateRoot('direcciones');
+    this.navCtrl.navigateForward('direcciones');
   }
 
   seguimiento(user) {
     console.log(user.operationId);
     this.dataClient.setUser(user);
     this.dataClient.operationID = user.operationId;
-    this.navCtrl.navigateRoot('vivienda');
+    this.navCtrl.navigateForward('vivienda');
   }
 
 

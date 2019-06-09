@@ -50,7 +50,7 @@ export class ViviendaPage implements OnInit {
   }
 
   regresar() {
-    this.navCtrl.navigateRoot('clientes-lista');
+    this.navCtrl.navigateBack('clientes-lista');
   }
 
   tomarFoto( key: PhotoEnum ) {

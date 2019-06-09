@@ -352,7 +352,7 @@ public setDireccionServ(direccionServ: any): void {
 
   finishedVisit() {
     this._store.cerrarSesion();
-    this.navCtrl.navigateRoot('login');
+    this.navCtrl.navigateBack('clientes-lista');
   }
 
 

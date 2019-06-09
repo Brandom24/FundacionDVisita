@@ -36,11 +36,11 @@ export class DireccionesPage implements OnInit {
 
     this.photoS.asignar(this.user.addressId);
     this.photoS.saveRazones('Inicio el proceso de visita', 'EN PROCESO', false);
-    this.navCtrl.navigateRoot('vivienda');
+    this.navCtrl.navigateForward('vivienda');
   }
 
   listaC() {
-    this.navCtrl.navigateRoot('clientes-lista');
+    this.navCtrl.navigateBack('clientes-lista');
   }
 
 }
