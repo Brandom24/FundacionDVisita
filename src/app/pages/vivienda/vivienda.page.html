@@ -1,12 +1,14 @@
 <ion-header no-border>
     <ion-toolbar color="secondary">
-            <ion-buttons slot="start">
+            <!-- <ion-buttons slot="start">
                     <ion-back-button text=""></ion-back-button>
-                </ion-buttons>
+                </ion-buttons> -->
       <ion-title>Vivienda</ion-title>
     </ion-toolbar>
 </ion-header>
+
 <ion-content padding>
+    <div *ngIf="!pService.procesoFinalizado">
     <ion-item class="item_ingreso">
         <ion-label>¿Encontró la vivienda?</ion-label>
         <p *ngIf="!existe_vivienda">No</p>
@@ -96,6 +98,13 @@ Volver a capturar
       </ion-col>
     </ion-row>
   </ion-grid>
+</div>
+
+<div>
+    <ion-button class="btn_block" expand="block" fill="outline" (click)="irLista()">Buscar direccion</ion-button>
+    <br>
+    <ion-button class="btn_final" expand="block" (click)="salirApp()">Salir de la aplicacion</ion-button>
+</div>
 
 <!-- <div text-center>
     <ion-button class="btn_final" expand="block" (click)="sendPhoto()">

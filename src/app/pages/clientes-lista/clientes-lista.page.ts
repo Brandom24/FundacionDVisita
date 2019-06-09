@@ -3,6 +3,7 @@ import { DataClientesService } from '../../services/data-clientes.service';
 import { IonList, NavController, AlertController } from '@ionic/angular';
 import { EstadosMunicipiosService } from '../../services/estados-municipios.service';
 import { GuardarStorageService } from '../../services/guardar-storage.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-clientes-lista',
@@ -23,17 +24,29 @@ export class ClientesListaPage implements OnInit {
   arrayLocality: string[] = [];
   resMessage: string;
   resCode: number;
+  recargar: any;
 
   constructor(private dataClient: DataClientesService,
               private navCtrl: NavController,
               private localityS: EstadosMunicipiosService,
               private _store: GuardarStorageService,
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private route: ActivatedRoute) {
 
                   this.localityS.generateState().subscribe( data => {
                     this.state = data;
                     // console.log(this.state);
                   });
+
+                  // this.route.params.subscribe(data => {
+                  //   this.recargar = data;
+                  // });
+
+                  // console.log(this.recargar);
+                  // console.log(this.selectSt);
+                  // console.log(this.selectMuni);
+                  
+
                }
 
   ngOnInit() {
@@ -52,6 +65,7 @@ export class ClientesListaPage implements OnInit {
     this.selectSt = event.detail.value.id_value;
     console.log(this.selectSt);
     this.selectEs = event.detail.value.name;
+    this.clientes = null;
 
     this.localityS.generateMuni(this.selectSt.toString()).subscribe( data => {
       this.jsonMuni = data;

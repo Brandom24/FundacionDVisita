@@ -136,6 +136,7 @@ export class ViviendaPage implements OnInit {
       if (this.photos.has(1) && this.photos.has(2)) {
 
         this.pService.sendPhotos(this.photos, this.fecha);
+        this.pService.saveRazones('Visita domiciliaria finalizada.', 'FINALIZADO', false);
       } else {
         this.presentAlert('Capture las dos fotos que se le pide');
       }
@@ -158,7 +159,7 @@ export class ViviendaPage implements OnInit {
     if (this.existe_vivienda && !this.ingreso) {
       // No ingreso a la vivienda, servicio para mandar informacion
       if (this.photos.has(1) && !this.photos.has(2)) {
-        if (this.select_razon != null && this.select_razon !== '') {
+        if (this.select_razon !== null && this.select_razon !== '') {
 
           this.pService.sendPhotos(this.photos, this.fecha);
           this.pService.saveRazones(this.select_razon, 'FINALIZADO', false);
@@ -191,6 +192,14 @@ export class ViviendaPage implements OnInit {
     ]
     });
     await alert.present();
+  }
+
+  irLista() {
+    this.navCtrl.navigateRoot('clientes-lista');
+  }
+
+  salirApp() {
+    this.navCtrl.navigateRoot('login');
   }
 
 }

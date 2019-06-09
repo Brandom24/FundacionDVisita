@@ -20,8 +20,8 @@ export class DireccionesPage implements OnInit {
               private razones: RazonesService,
               private photoS: PhotosService) {
 
-                  this.user = this.dataClient.getUser();
-
+                this.user = this.dataClient.getUser();
+                  
               }
 
   ngOnInit() {

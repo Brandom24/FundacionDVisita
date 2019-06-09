@@ -14,8 +14,8 @@
            
             <form>
         
-                  <ion-input [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
-                  <ion-input [(ngModel)]="password" class="datos_input" type="password" name="password" placeholder="Contraseña"></ion-input>
+                  <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
+                  <ion-input maxlength="15" [(ngModel)]="password" class="datos_input" type="password" name="password" placeholder="Contraseña"></ion-input>
         
                   <ion-button [disabled]=" user.length < 3 || password.length < 3" class="boton_style" (click)="verifyUser()" expand="block" fill="outline">Iniciar sesion
                     <ion-icon slot="end" name="log-in"></ion-icon>

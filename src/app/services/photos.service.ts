@@ -8,6 +8,7 @@ import { RazonesService } from './razones.service';
 import { LoadingService } from './loading.service';
 import { URL_SERVICIOS } from '../config/url.services';
 import { DataClientesService } from './data-clientes.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,7 @@ export class PhotosService {
   personId: number;
   timeZoneId: number;
   userId: number;
+  procesoFinalizado = false;
 
   private photosServ: any;
   private fechaServ: any;
@@ -43,7 +45,8 @@ export class PhotosService {
               private _store: GuardarStorageService,
               private razones: RazonesService,
               private loading: LoadingService,
-              private dataClient: DataClientesService) {}
+              private dataClient: DataClientesService,
+              private router: Router) {}
 
   public getPhotosServ(): any {
       return this.photosServ;
@@ -150,7 +153,7 @@ public setDireccionServ(direccionServ: any): void {
 
                 this.loading.dismiss();
                 photos.clear();
-                this.finishedVisit();
+                // this.finishedVisit();
 
               }, async error => {
                 this.result = error['resultOK'];
@@ -210,9 +213,7 @@ public setDireccionServ(direccionServ: any): void {
 
     if (define) {
       this.loading.present('Finalizando..');
-    } else {
-
-    }
+    } 
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -228,10 +229,10 @@ public setDireccionServ(direccionServ: any): void {
 
               if (define) {
                 this.loading.dismiss();
-                this.finishedVisit();
-              } else {
-
+                // this.finishedVisit();
               }
+
+              this.procesoFinalizado = true;
 
             }, async error => {
               this.resultR = error['error'];
@@ -353,6 +354,7 @@ public setDireccionServ(direccionServ: any): void {
   finishedVisit() {
     this._store.cerrarSesion();
     this.navCtrl.navigateBack('clientes-lista');
+    // this.router.navigate(['/clientes-lista', {recargar: true}]);
   }
 
 
