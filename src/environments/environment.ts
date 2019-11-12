@@ -3,14 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
-};
+  production: false,
 
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+  URL_8083: 'http://apidev.buroidentidad.com:8083',
+  URL_9419: 'http://apidev.buroidentidad.com:9419',
+  URL_9415: 'http://apidev.buroidentidad.com:9415',
+
+  ERROR_PROBLEMA: '¡Ocurrio un problema!',
+  ERROR_CONEXION_ERROR: 'Se esta presentando un problema al conectarse con los servicios, si persiste el problema inicie sesion nuevament',
+  ERROR_CONEXION_200: 'Se esta presentando un problema con los datos enviados'
+};

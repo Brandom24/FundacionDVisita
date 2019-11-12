@@ -1,29 +1,43 @@
-<ion-content class="contenido" padding>
+<ion-content padding>
 
-    <div class="header_logo" id="logo" padding text-center>
+    <div @logo padding text-center>
       <img class="style_logo" src="./assets/img/logoTrans_letra_Blanca.png">
     </div>
+
     <h2 text-center class="style_hs">Visita Domiciliaria</h2>
     
-    <div class="fondo_green">
-    <ion-card >
+    <ion-card>
       <h3 text-center class="style_hs">Inicio de sesión</h3> 
     <ion-card-content>
       
         <div text-center>
-           
-            <form>
+            <form [formGroup]="validations_form">
         
-                  <ion-input maxlength="15" [(ngModel)]="user" class="datos_input" type="email" name="email" placeholder="Usuario"></ion-input>
-                  <ion-input maxlength="15" [(ngModel)]="password" class="datos_input" type="password" name="password" placeholder="Contraseña"></ion-input>
+                  <ion-input maxlength="15" formControlName="user" class="datos_input" type="email" placeholder="Usuario"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.user">
+                      <div class="error-message" *ngIf="validations_form.get('user').hasError(validation.type)">
+                        <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
+
+                  <ion-input maxlength="15" formControlName="password" class="datos_input" type="password" placeholder="Contraseña"></ion-input>
+                  <div class="validation-errors">
+                    <ng-container *ngFor="let validation of validation_messages.password">
+                      <div class="error-message" *ngIf="validations_form.get('password').hasError(validation.type)">
+                        <ion-icon name="information-circle-outline"></ion-icon> {{ validation.message }}
+                      </div>
+                    </ng-container>
+                  </div>
         
-                  <ion-button [disabled]=" user.length < 3 || password.length < 3" class="boton_style" (click)="verifyUser()" expand="block" fill="outline">Iniciar sesion
+                  <ion-button [disabled]="validations_form.invalid  " class="boton_style" (click)="verifyUser()" expand="block" fill="outline">Iniciar sesion
                     <ion-icon slot="end" name="log-in"></ion-icon>
                   </ion-button>
             </form>
           </div>
+
     </ion-card-content>
-  </ion-card>
-  </div>
+  </ion-card> 
   
   </ion-content>

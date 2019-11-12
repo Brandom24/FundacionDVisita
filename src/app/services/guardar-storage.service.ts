@@ -125,7 +125,8 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
 
   constructor(private platform: Platform,
               private storage: Storage,
-              private sqlite: SQLite) { }
+              private sqlite: SQLite,
+              private plaform: Platform) { }
 
    // getDatosDomicilio
    setImagenDomicilio(imagenDomicilio: any) {
@@ -202,144 +203,57 @@ public setJsonDatosActivity(jsonDatosActivity: JsonDatosActivity): void {
   }
 
   guardarStorageImagenB(data: any) {
-  //console.log('Data del guardarStorage B' + JSON.stringify(data) + ' Tamaño' + data.length);
-  //this.storage.set('capturasB', JSON.stringify(data));
   this.capturasB = data;
-  }
-
-  guardarStorage(data: any) {
-    // console.log('Data del guardarStorage F' + JSON.stringify(data) + ' Tamaño' + data.length);
   }
 
   guardarStorageImagenF(data: any) {
 
-    // console.log('Data del guardarStorage F' + JSON.stringify(data) + ' Tamaño' + data.length);
-
-    // this.storage.set('capturasF', JSON.stringify(data));
     this.capturasF = data;
-    // if (this.platform.is('cordova')) {
-    //   // Dispositivo
-    //   if (data.length > 1) {
-    //     this.storage.set('state', data[0]);
-    //     this.storage.set('municipio', data[1]);
-    //   } else {
-    //     this.storage.set('address', JSON.stringify(data));
-    //   }
+  }
 
-    //   console.log('Datos guardados en dispositivo');
+  // ******************* Storage ***********************
 
-    // } else {
-    //   // Computadora
-    //   if (data.length > 1) {
-    //     localStorage.setItem('state', data[0]);
-    //     localStorage.setItem('municipio', data[1]);
-    //   } else {
-    //     localStorage.setItem('address', JSON.stringify(data));
-    //   }
-    // }
+  cargarStorage(key: string): any {
+
+    if (this.plaform.is('cordova')) {
+      // celular
+      return this.storage.get(key).then(data => {
+          return data;
+      });
+    } else {
+      // computadora
+      if (localStorage.getItem(key)) {
+        return JSON.parse(localStorage.getItem(key));
+      }
+    }
+
+    return null;
 
   }
 
-  cargarStorage() {
+  guardarStorage(key: string, value: any) {
 
-    // this.createConexion().then((db: SQLiteObject) => {
-
-    //   db.executeSql('select tabla direcciones').then( info => {
-    //     console.log(Object.keys(info).join(' - '));
-    //     console.log(info);
-    //     /*info.data.forEach(e => {
-    //       insercion += ' \'' + data[e] + '\',';
-    //     });
-    //     db.executeSql('insert into direcciones values(' + insercion.substring(0, insercion.length - 1) + ')').then(infos => {
-    //       // procedimiento de toast
-    //     });*/
-    //   });
-    // });
-
-    this.storage.get('address').then((data) => {
-      this.address_St = data;
-      // console.log('Caragar datos guardados en dispositivo' + data);
-    });
-
-    // return new Promise( (resolve, reject) => {
-
-    //   if (this.platform.is('cordova')) {
-    //     // Dispositivo
-    //     this.storage.ready().then(() => {
-
-    //       this.storage.get('address').then( (data) => {
-    //         if (data) {
-    //           this.address_St = data;
-    //         }
-    //         // resolve();
-    //       });
-    //       this.storage.get('state').then( (data) => {
-    //         if (data) {
-    //           this.state_St = data;
-    //         }
-    //       });
-    //       this.storage.get('municipio').then( (data) => {
-    //         if (data) {
-    //           this.municipio_St = data;
-    //         }
-    //         resolve();
-    //       });
-
-    //     });
-
-    //     console.log('Caragar datos guardados en dispositivo');
-
-    //   } else {
-    //     // Computadora
-    //     if (localStorage.getItem('address')) {
-    //       this.address_St = JSON.parse(localStorage.getItem('address'));
-    //     }
-    //     if (localStorage.getItem('state')) {
-    //       this.state_St = localStorage.getItem('state');
-    //     }
-    //     if (localStorage.getItem('municipio')) {
-    //       this.municipio_St = localStorage.getItem('municipio');
-    //     }
-    //     resolve();
-    //   }
-
-    // });
-
+    if (this.plaform.is('cordova')) {
+      // celular
+      this.storage.set(key, value);
+    } else {
+      // computadora
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+    
   }
 
   cerrarSesion() {
     this.address_St = null;
     this.state_St = null;
     this.municipio_St = null;
-
-    // Guardar storage
-    this.limpiarStorage();
   }
 
-  limpiarStorage() {
-
-    // if (this.platform.is('cordova')) {
-    //   // Dispositivo
-        this.storage.remove('state');
-        this.storage.remove('municipio');
-        this.storage.remove('address');
-
-    // } else {
-    //   // Computadora
-    //     localStorage.removeItem('state');
-    //     localStorage.removeItem('municipio');
-    //     localStorage.removeItem('address');
-
-    // }
-
+  limpiarStorage(key: string) {
+      this.storage.remove(key);
   }
 
-  // createConexion(): Promise<SQLiteObject> {
-  //   const config = {
-  //     name: 'data.db',
-  //     location: 'default',
-  //     key: 'jkkjklhkjklj'
-  //   };
-  //   return this.sqlite.create(config);
-  // }
+  limpiarStorageGeneral() {
+    this.storage.clear();
+  }
 }

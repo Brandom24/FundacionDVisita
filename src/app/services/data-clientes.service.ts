@@ -17,6 +17,8 @@ export class DataClientesService {
 
   getUsers(state: string, municipio: string) {
 
+    console.log(state, municipio, this.login.typeUser);
+    
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + this.login.token
     });

@@ -1,6 +1,13 @@
 <ion-header no-border>
   <ion-toolbar color="secondary">
     <ion-title>Visitas</ion-title>
+
+    <ion-buttons slot="end">
+        <ion-button style="font-size: 10px;" (click)="salirLogin()">
+          Salir
+        </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -9,18 +16,18 @@
     <ion-item>
       <ion-label>Estado:</ion-label>
       <ion-select placeholder="Estado.." interface="popover" (ionChange)="selectState($event)">
-        <ion-select-option *ngFor="let item of state" [value]="item">{{item.name}}</ion-select-option>
+        <ion-select-option *ngFor="let state of state" [value]="state">{{ state.value }}</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
         <ion-label>Municipio:</ion-label>
-        <ion-select placeholder="Municipio.." interface="popover" (ionChange)="selectMunicipio($event)">
-          <ion-select-option *ngFor="let item of jsonMuni">{{item.name}}</ion-select-option>
+        <ion-select placeholder="Municipio" interface="popover" (ionChange)="selectMunicipio($event)">
+          <ion-select-option *ngFor="let city of jsonMuni" [value]="city">{{ city.value }}</ion-select-option>
         </ion-select>
     </ion-item>
 
-    <ion-list #lista>
-      <ion-item-sliding *ngFor="let item of clientes">
+  <ion-list #lista>
+    <ion-item-sliding *ngFor="let item of clientes">
       <ion-item class="item_lista">
       <ion-label>
               <h6>Estado: {{item.state ? item.state: ''}}</h6>
@@ -30,11 +37,11 @@
           Ver Direccion
           <ion-icon slot="icon-only" slot="end" name="globe"></ion-icon>
       </ion-button>
-      <ion-button *ngIf="item.status === 'EN PROCESO'" class="btn_ver" fill="outline" slot="end" (click)="seguimiento(item)">
+      <ion-button *ngIf="item.status === 'EN PROCESO'" class="btn_proceso" fill="outline" slot="end" (click)="seguimiento(item)">
           Seguimiento
       </ion-button>
-    </ion-item>
-  </ion-item-sliding>
+      </ion-item>
+    </ion-item-sliding>
   </ion-list>
 
   <ion-list *ngIf="loading">
@@ -57,16 +64,10 @@
       </ion-item>
   </ion-list>
 
-  <!-- <div text-center *ngIf="clientes">
-    <ion-chip color="secondary">
-      <ion-label color="dark">No se encontró ninguna vivienda dentro de esos parámetros.</ion-label>
-    </ion-chip>
-  </div> -->
-
   <div text-center *ngIf="resCode">
     <ion-chip color="secondary">
       <ion-label color="dark">No se encontró ninguna vivienda registrada dentro de esos parámetros.</ion-label>
     </ion-chip>
-  </div>
+  </div>  
 
 </ion-content>

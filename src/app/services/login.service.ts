@@ -5,6 +5,9 @@ import { Usuario } from '../objetosDTO/usuario';
 import { LoadingService } from '../services/loading.service';
 import { GuardarStorageService } from './guardar-storage.service';
 import { URL_TOKEN, URL_SERVICIOS } from '../config/url.services';
+import { Router } from '@angular/router';
+import { AlertService } from '../herramientas/alert.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +22,15 @@ export class LoginService {
   boton: string;
 
   constructor(private http: HttpClient,
-              private alertCtrl: AlertController,
+              private alertServ: AlertService,
               private navCtrl: NavController,
               private loading: LoadingService,
-              private _store: GuardarStorageService) {
-                this._store.cargarStorage();
-              }
+              private _store: GuardarStorageService,
+              private router: Router) {}
 
   generateToken() {
 
-    this.loading.present('Conectando..');
+    this.loading.present('Cargando..');
 
     const headers = new HttpHeaders({
       'authorization': 'Basic dXNlcmFwcDpwYXNzd29yZA==',
@@ -40,7 +42,7 @@ export class LoginService {
     .set('username', 'frd')
     .set('password', 'password');
 
-    return this.http.post(URL_TOKEN + '/uaa/oauth/token', params, {headers})
+    return this.http.post(environment.URL_8083 + '/uaa/oauth/token', params, {headers})
               .subscribe( async data => {
                 this.token = data['access_token'];
                 this._store.setBearerToken(this.token);
@@ -49,22 +51,8 @@ export class LoginService {
 
               }, async error => {
                 this.loading.dismiss();
+                this.alertServ.alertaAction('¡Usuario no encontrado!', environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.generateToken() });
 
-                const alert = await this.alertCtrl.create({
-                  backdropDismiss: false,
-                  header: 'Ups!',
-                  subHeader: 'No se pudo conectar intente nuevamente',
-                  buttons: [{
-                    text: 'Reintentar',
-                    role: 'reintentar',
-                    cssClass: 'secondary',
-                    handler: () => {
-                      this.generateToken();
-                    }
-                  },
-                ]
-                });
-                await alert.present();
               });
   }
 
@@ -73,72 +61,48 @@ export class LoginService {
     this.loading.present('Verificando datos..');
 
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.token
+      'Authorization': 'Bearer ' + this.token,
+      'Content-Type': 'application/json'
     });
 
     this.dataUser.setUser(user);
     this.dataUser.setPassword(password);
 
-    const formData = new FormData();
-    formData.append('json', JSON.stringify(this.dataUser));
-
-    return this.http.post(URL_SERVICIOS + '/auth/login', formData, {headers})
+    return this.http.post(environment.URL_9419 + '/bid/rest/v1/login', JSON.stringify(this.generateJLogin(user, password)), {headers})
               .subscribe( async data => {
-                // console.log('Permitido', data);
-                this.result = data['resultOK'];
-                this.message = data['message'];
-                this.typeUser = data['user'];
+                console.log('Login ', data);
                 this.loading.dismiss();
-                // this.check_Storage();
-                if(this.result) {
-                this.navCtrl.navigateRoot('clientes-lista');
+
+                if(data['code'] === -9999) {
+                  this.result = data['data']['result'];
+                  this.message = data['message'];
+                  this.typeUser = data['data']['user'];
+                  
+                  this._store.guardarStorage('recargar', false);
+                  this.navCtrl.navigateRoot('clientes-lista');
 
                 } else {
-                  const alert = await this.alertCtrl.create({
-                    mode: 'ios',
-                    backdropDismiss: false,
-                    header: 'Error al intentar iniciar sesión',
-                    subHeader: this.message,
-                    buttons: [{
-                      text: 'Cambiar datos',
-                      role: 'reintentar',
-                      cssClass: 'secondary',
-                      handler: () => {
-                        // accion del boton
-                      }
-                    },
-                  ]
-                  });
-                  await alert.present();
+                  this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiendo');
                 }
 
               }, async error => {
-
                 this.loading.dismiss();
+                this.alertServ.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.verifyUser(user, password) });
 
-                const alert = await this.alertCtrl.create({
-                  mode: 'ios',
-                  header: '¡Ups!',
-                  message: 'Ocurrio un problema en la conexion ¿Reitentar?',
-                  buttons: [
-                    {
-                      text: 'No',
-                      role: 'volver',
-                      cssClass: 'secondary',
-                      handler: (blah) => {
-                        // Accion del boton
-                      }
-                    }, {
-                      text: 'Si',
-                      handler: () => {
-                        this.verifyUser(this.dataUser.getUser(), this.dataUser.getPassword())
-                      }
-                    }
-                  ]
-                });
-                await alert.present();
+                
               });
 
+  }
+
+  generateJLogin(user: string, password: string) {
+    const request= {
+        data: {
+            user: user,
+            password: password
+        }
+      };
+
+    return request;
   }
 
   check_Storage() {

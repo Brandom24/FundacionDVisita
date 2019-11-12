@@ -9,6 +9,8 @@ import { LoadingService } from './loading.service';
 import { URL_SERVICIOS } from '../config/url.services';
 import { DataClientesService } from './data-clientes.service';
 import { Router } from '@angular/router';
+import { AlertService } from '../herramientas/alert.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,7 @@ export class PhotosService {
   personId: number;
   timeZoneId: number;
   userId: number;
-  procesoFinalizado = false;
+  procesoFinalizado: boolean;
 
   private photosServ: any;
   private fechaServ: any;
@@ -40,7 +42,7 @@ export class PhotosService {
 
   constructor(private http: HttpClient,
               private login: LoginService,
-              private alertCtrl: AlertController,
+              private alertCtrl: AlertService,
               private navCtrl: NavController,
               private _store: GuardarStorageService,
               private razones: RazonesService,
@@ -97,95 +99,87 @@ public setDireccionServ(direccionServ: any): void {
 }
 
 
-  sendPhotos( photos: any, fecha: any) {
+  sendPhotos( photos: any, fecha: any, arrayRazones: any[]) {
 
-    this.setPhotosServ(photos);
-    this.setFechaServ(fecha);
+    this.loading.present('Guardando fotos..');
 
-    this.loading.present('Finalizando..');
+    setTimeout(() => {
+        this.loading.dismiss();
+        this.saveRazones(arrayRazones[0], arrayRazones[1], arrayRazones[2]);
 
-    const formData = new FormData();
-    console.log(photos.size);
+    }, 4000);
 
-    console.log('Operation ID -------' + this.dataClient.operationID.toString());
-    if (photos.has(1) && photos.has(2)) {
+    // this.setPhotosServ(photos);
+    // this.setFechaServ(fecha);
 
-    this.dataP.setDocCode1('IDOFA');
-    this.dataP.setDocCode2('IDOFB');
-    this.dataP.setOperID1(this.dataClient.operationID.toString());
-    this.dataP.setOperID2(this.dataClient.operationID.toString());
-    this.dataP.setActivityStatus1('OK');
-    this.dataP.setActivityStatus2('OK');
-    this.dataP.setLat(photos.get(3) ? photos.get(3) : 19 );
-    this.dataP.setLng(photos.get(4) ? photos.get(4) : -90);
-    formData.append('jsonRequest', JSON.stringify(this.dataP));
-    formData.append('file1', photos.get('blobP'));
-    formData.append('dataFile1', JSON.stringify(this.generateJson('Vivienda_Exterior', fecha)));
-    formData.append('file2', photos.get('blobS'));
-    formData.append('dataFile2', JSON.stringify(this.generateJson('Vivienda_Interior', fecha)));
+    // this.loading.present('Guardando fotos..');
 
-    } else {
+    // const formData = new FormData();
+    // console.log(photos.size);
 
-    this.dataP.setDocCode1('IDOFA');
-    this.dataP.setOperID1(this.dataClient.operationID.toString());
-    this.dataP.setActivityStatus1('OK');
-    this.dataP.setLat(photos.get(3));
-    this.dataP.setLng(photos.get(4));
-    formData.append('jsonRequest', JSON.stringify(this.dataP));
-    formData.append('file1', photos.get('blobP'));
-    formData.append('dataFile1', JSON.stringify(this.generateJson('Vivienda_Exterior', fecha)));
+    // console.log('Operation ID -------' + this.dataClient.operationID.toString());
+    // if (photos.has(1) && photos.has(2)) {
 
-    }
+    // this.dataP.setDocCode1('IDOFA');
+    // this.dataP.setDocCode2('IDOFB');
+    // this.dataP.setOperID1(this.dataClient.operationID.toString());
+    // this.dataP.setOperID2(this.dataClient.operationID.toString());
+    // this.dataP.setActivityStatus1('FINALIZADO');
+    // this.dataP.setActivityStatus2('FINALIZADO');
+    // this.dataP.setLat(photos.get(3) ? photos.get(3) : 19 );
+    // this.dataP.setLng(photos.get(4) ? photos.get(4) : -90);
+    // formData.append('jsonRequest', JSON.stringify(this.dataP));
+    // formData.append('file1', photos.get('blobP'));
+    // formData.append('dataFile1', JSON.stringify(this.generateJson('Vivienda_Exterior', fecha)));
+    // formData.append('file2', photos.get('blobS'));
+    // formData.append('dataFile2', JSON.stringify(this.generateJson('Vivienda_Interior', fecha)));
 
-    const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.login.token
-    });
+    // } else {
 
-    console.log(JSON.stringify(formData));
+    // this.dataP.setDocCode1('IDOFA');
+    // this.dataP.setOperID1(this.dataClient.operationID.toString());
+    // this.dataP.setActivityStatus1('OK');
+    // this.dataP.setLat(photos.get(3));
+    // this.dataP.setLng(photos.get(4));
+    // formData.append('jsonRequest', JSON.stringify(this.dataP));
+    // formData.append('file1', photos.get('blobP'));
+    // formData.append('dataFile1', JSON.stringify(this.generateJson('Vivienda_Exterior', fecha)));
 
-    return this.http.post(URL_SERVICIOS + '/documents/upload', formData, {headers})
-              .subscribe( data => {
-                this.result = data['resultOK'];
-                this.message = data['message'];
+    // }
 
-                console.log(data);
-                console.log('Servicios de fotos' + this.message);
+    // const headers = new HttpHeaders({
+    //   'Authorization': 'Bearer ' + this.login.token
+    // });
 
-                this.loading.dismiss();
-                photos.clear();
-                // this.finishedVisit();
+    // console.log(JSON.stringify(formData));
 
-              }, async error => {
-                this.result = error['resultOK'];
-                this.message = error['message'];
-                console.log(error);
+    // return this.http.post(URL_SERVICIOS + '/documents/upload', formData, {headers}).subscribe( data => {
+    //   console.log('Upload Fotos', data);
 
-                this.loading.dismiss();
-                photos.clear();
+    //   this.loading.dismiss();
+    //   this.saveRazones(arrayRazones[0], arrayRazones[1], arrayRazones[2]);
 
-                const alert = await this.alertCtrl.create({
-                  mode: 'ios',
-                  header: '¡Ups!',
-                  message: 'Ocurrio un problema en la conexion',
-                  buttons: [
-                    {
-                      text: 'Regresar',
-                      role: 'volver',
-                      cssClass: 'secondary',
-                      handler: (blah) => {
-                        // Accion del boton
-                      }
-                    }, {
-                      text: 'Reintentar',
-                      handler: () => {
-                        this.sendPhotos(this.getPhotosServ(), this.getFechaServ());
-                      }
-                    }
-                  ]
-                });
-                await alert.present();
+    //   // if(data['code'] === -9999) {
+    //   //   this.result = data['resultOK'];
+    //   //   this.message = data['message'];
+    //   //   photos.clear();
+    //   //   this.saveRazones(arrayRazones[0], arrayRazones[1], arrayRazones[2]);
 
-              });
+    //   // } else {
+    //   //   this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiedno');
+    //   // }
+    // }, error => {
+    //     this.result = error['resultOK'];
+    //     this.message = error['message'];
+    //     console.log(error);
+
+    //     this.loading.dismiss();
+    //     this.saveRazones(arrayRazones[0], arrayRazones[1], arrayRazones[2]);
+
+    //     // photos.clear();
+    //     // this.alertCtrl.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.sendPhotos(this.getPhotosServ(), this.getFechaServ(), arrayRazones) });
+
+    //   });
 
   }
 
@@ -212,7 +206,7 @@ public setDireccionServ(direccionServ: any): void {
     this.setDefineServ(define);
 
     if (define) {
-      this.loading.present('Finalizando..');
+      this.loading.present('Finalizando visita..');
     } 
 
     const headers = new HttpHeaders({
@@ -220,60 +214,40 @@ public setDireccionServ(direccionServ: any): void {
       'Authorization': 'Bearer ' + this.login.token
     });
 
-    return this.http.put(URL_SERVICIOS + '/operations', JSON.stringify(this.razonesJ(razon, actividad)), {headers})
-            .subscribe( data => {
-              this.resultR = data['error'];
-              this.messageR = data['message'];
-              console.log(data);
-              console.log('SaveRazones' + this.messageR);
+    return this.http.put(URL_SERVICIOS + '/operations', JSON.stringify(this.razonesJ(razon, actividad)), {headers}).subscribe( data => {
+      console.log('Save Rasones', data);
 
-              if (define) {
-                this.loading.dismiss();
-                // this.finishedVisit();
-              }
+      if(data['code'] === -9999) {
+        this._store.guardarStorage('seEnvio', true);
+        this.resultR = data['error'];
+        this.messageR = data['message'];
 
-              this.procesoFinalizado = true;
+        if (define) {
+          this.loading.dismiss();
+          this.cambiarStatus(true);
+        }
 
-            }, async error => {
-              this.resultR = error['error'];
-              this.messageR = error['message'];
-              console.log('SaveRazones' + JSON.stringify(error));
+      } else {
+          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiedno'); 
+      }
 
-              if (define) {
+      }, async error => {
+        console.log('SaveRazones' + error);
+        this.resultR = error['error'];
+        this.messageR = error['message'];
 
-                this.loading.dismiss();
+        if (define) {
+          this.loading.dismiss();
+          this.alertCtrl.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.saveRazones(this.getRazonServ(), this.getActividadServ(), this.getDefineServ()) });
 
-                const alert = await this.alertCtrl.create({
-                  mode: 'ios',
-                  header: '¡Ups!',
-                  message: 'Ocurrio un problema en la conexion',
-                  buttons: [
-                    {
-                      text: 'Regresar',
-                      role: 'volver',
-                      cssClass: 'secondary',
-                      handler: (blah) => {
-                        // Accion del boton
-                      }
-                    }, {
-                      text: 'Reintentar',
-                      handler: () => {
-                        this.saveRazones(this.getRazonServ(), this.getActividadServ(), this.getDefineServ());
-                      }
-                    }
-                  ]
-                });
-                await alert.present();
+        }
 
-              } else {
-
-              }
-
-            });
+      });
   }
 
-  asignar(address: number) {
+  asignar(address: number, arrayRazones: any[]) {
 
+    this.loading.present('Asignando visita');
     this.setDireccionServ(address);
 
     const headers = new HttpHeaders({
@@ -281,32 +255,51 @@ public setDireccionServ(direccionServ: any): void {
       'Authorization': 'Bearer ' + this.login.token
     });
 
-    return this.http.put(URL_SERVICIOS + '/list/assign/customers', JSON.stringify(this.asignarJ(address)), {headers})
-                .subscribe( data => {
+    return this.http.put(URL_SERVICIOS + '/list/assign/customers', JSON.stringify(this.asignarJ(address)), {headers}).subscribe( data => {
+        console.log('Respuesta de asignar', data);
+        
+        if(data['code'] === -9999) {
+          this.saveRazonesFirst(arrayRazones[0], arrayRazones[1], false);
 
-                  console.log(data);
+        } else {
+          this.loading.dismiss();
+          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiedno'); 
+        }
 
-                }, async error => {
+      }, async error => {
+        this.loading.dismiss();
+        this.alertCtrl.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.asignar(address, arrayRazones) });
+      });
 
-                  const alert = await this.alertCtrl.create({
-                    mode: 'ios',
-                    backdropDismiss: false,
-                    header: '¡Ups!',
-                    subHeader: 'Ocurrio un error en la conexion',
-                    buttons: [{
-                      text: 'Reitentar',
-                      role: 'reintentar',
-                      cssClass: 'secondary',
-                      handler: () => {
-                        // accion del boton
-                        this.asignar(this.getDireccionServ());
-                      }
-                    },
-                  ]
-                  });
-                  await alert.present();
-                });
+  }
 
+  saveRazonesFirst(razon: string, actividad: string, loading: boolean) {
+
+    if(loading) {
+      this.loading.present('Asignando visita...');
+    }
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.login.token
+    });
+
+    return this.http.put(URL_SERVICIOS + '/operations', JSON.stringify(this.razonesJ(razon, actividad)), {headers}).subscribe( data => {
+      console.log('Save RasonesFirst', data);
+      this.loading.dismiss();
+
+      if(data['code'] === -9999) {
+        this.navCtrl.navigateForward('vivienda');
+      } else {
+        this.alertCtrl.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'rojo', 'Reitentar', ()=> { this.saveRazonesFirst(razon, actividad, true) });
+      }
+
+      }, async error => {
+        this.loading.dismiss();
+        console.log('SaveRazones' + error);
+        this.alertCtrl.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.saveRazonesFirst(razon, actividad, true) });
+
+      });
   }
 
   razonesJ(razon: string, actividad: string) {
@@ -347,7 +340,7 @@ public setDireccionServ(direccionServ: any): void {
        'operationId': 0
     }
 
-    console.log(jsonA);
+    console.log('JSON Asignar', jsonA);
     return jsonA;
   }
 
@@ -355,6 +348,12 @@ public setDireccionServ(direccionServ: any): void {
     this._store.cerrarSesion();
     this.navCtrl.navigateBack('clientes-lista');
     // this.router.navigate(['/clientes-lista', {recargar: true}]);
+  }
+
+  cambiarStatus(value: boolean) {
+    this.procesoFinalizado = value;
+    console.log('Valor de los botones', this.procesoFinalizado);
+    
   }
 
 

@@ -1,9 +1,20 @@
 <ion-header no-border>
   <ion-toolbar color="secondary">
-    <ion-buttons slot="start">
-      <ion-back-button text=""></ion-back-button>
-  </ion-buttons>
+
+      <ion-buttons slot="start">
+          <ion-button (click)="listaC()">
+            <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+
     <ion-title>Dirección</ion-title>
+
+    <ion-buttons slot="end">
+        <ion-button style="font-size: 10px;" (click)="salirLogin()">
+          Salir
+        </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
@@ -78,7 +89,7 @@
 </ion-label>
 </ion-item>
 
-<ion-grid>
+<!-- <ion-grid>
   <ion-row>
     <ion-col>
       <ion-button class="btn_line" expand="block" fill="outline" (click)="listaC()">Regresar</ion-button>
@@ -87,6 +98,8 @@
       <ion-button class="btn_block" expand="block" (click)="toVisit()">Visitar</ion-button>
     </ion-col>
   </ion-row>
-</ion-grid>
+</ion-grid> -->
+
+<ion-button class="btn_block" expand="block" (click)="toVisit()">Visitar</ion-button>
       
 </ion-content>

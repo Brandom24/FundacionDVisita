@@ -6,6 +6,8 @@ import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { PhotosService } from '../../services/photos.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { GuardarStorageService } from '../../services/guardar-storage.service';
+import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-vivienda',
@@ -34,23 +36,28 @@ export class ViviendaPage implements OnInit {
               private pService: PhotosService,
               private alertCtrl: AlertController,
               private _store: GuardarStorageService,
-              private navCtrl: NavController) {
-    this.photos = new Map();
-    this.getGeolocation();
+              private navCtrl: NavController,
+              private router: Router,
+              private loginSrv: LoginService,) {
+      this.photos = new Map();
+      this.getGeolocation();
 
-    this.tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
-    this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
-    this.arrayFecha = this.localISOTime.split('.');
-    this.fecha = this.arrayFecha[0] + 'Z';
+      this.tzoffset = (new Date()).getTimezoneOffset() * 60000; // offset in milliseconds
+      this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
+      this.arrayFecha = this.localISOTime.split('.');
+      this.fecha = this.arrayFecha[0] + 'Z';
 
-    this.fechaISO = new Date().toISOString();
+      this.fechaISO = new Date().toISOString();
    }
 
   ngOnInit() {
+    this.loginSrv.generateToken();
+
   }
 
   regresar() {
-    this.navCtrl.navigateBack('clientes-lista');
+    this._store.guardarStorage('recargar', true);
+    this.navCtrl.navigateRoot('clientes-lista');
   }
 
   tomarFoto( key: PhotoEnum ) {
@@ -135,8 +142,12 @@ export class ViviendaPage implements OnInit {
       // Deben de venir ambas fotos
       if (this.photos.has(1) && this.photos.has(2)) {
 
-        this.pService.sendPhotos(this.photos, this.fecha);
-        this.pService.saveRazones('Visita domiciliaria finalizada.', 'FINALIZADO', false);
+        let razones: any[] = [];
+        razones.push('Visita domiciliaria finalizada exitosamente.');
+        razones.push('FINALIZADO');
+        razones.push(true);
+
+        this.pService.sendPhotos(this.photos, this.fecha, razones);
       } else {
         this.presentAlert('Capture las dos fotos que se le pide');
       }
@@ -161,8 +172,12 @@ export class ViviendaPage implements OnInit {
       if (this.photos.has(1) && !this.photos.has(2)) {
         if (this.select_razon !== null && this.select_razon !== '') {
 
-          this.pService.sendPhotos(this.photos, this.fecha);
-          this.pService.saveRazones(this.select_razon, 'FINALIZADO', false);
+          let razones: any[] = [];
+          razones.push(this.select_razon);
+          razones.push('FINALIZADO');
+          razones.push(true);
+
+          this.pService.sendPhotos(this.photos, this.fecha, razones);
 
         } else {
           // En caso de que no se haya elejido ningun radio buton
@@ -195,10 +210,12 @@ export class ViviendaPage implements OnInit {
   }
 
   irLista() {
+    this._store.guardarStorage('recargar', true);
     this.navCtrl.navigateRoot('clientes-lista');
   }
 
   salirApp() {
+    this._store.limpiarStorageGeneral();
     this.navCtrl.navigateRoot('login');
   }
 

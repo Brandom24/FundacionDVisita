@@ -34,13 +34,23 @@ export class DireccionesPage implements OnInit {
     this.razones.setOperationId(this.user.operationId);
     console.log(this.user.operationId);
 
-    this.photoS.asignar(this.user.addressId);
-    this.photoS.saveRazones('Inicio el proceso de visita', 'EN PROCESO', false);
-    this.navCtrl.navigateForward('vivienda');
+    let arrayRazones: any[] = [];
+    arrayRazones.push('Inicio el proceso de visita');
+    arrayRazones.push('EN PROCESO');
+
+    this.photoS.asignar(this.user.addressId, arrayRazones);
+    
   }
 
   listaC() {
-    this.navCtrl.navigateBack('clientes-lista');
+    // this.navCtrl.navigateBack('clientes-lista');
+    this._store.guardarStorage('recargar', true);
+    this.navCtrl.navigateRoot('clientes-lista');
+  }
+
+  salirLogin() {
+    this._store.limpiarStorageGeneral();
+    this.navCtrl.navigateRoot('login');
   }
 
 }

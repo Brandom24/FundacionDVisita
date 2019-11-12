@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoginService } from './login.service';
-import { URL_SERVICIOS } from '../config/url.services';
+import { URL_SERV_PUERTO } from '../config/url.services';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,22 +10,11 @@ import { URL_SERVICIOS } from '../config/url.services';
 export class EstadosMunicipiosService {
 
   locality: any[];
-  url = URL_SERVICIOS + '/catalogues/catalogue/catalogueValues';
+  url = URL_SERV_PUERTO + '/catalogues/selector';
 
   constructor(private http: HttpClient,
               private loginSrv: LoginService) { }
 
-  generateMuni(municipio: string) {
-
-    const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.loginSrv.token
-    });
-
-    const formData = new FormData();
-    formData.append('json', '{"nombre": "Ciudad", "dependencia": "' + municipio + '" }');
-
-    return this.http.post( this.url , formData, {headers});
-  }
 
   generateState() {
 
@@ -32,9 +22,15 @@ export class EstadosMunicipiosService {
       'Authorization': 'Bearer ' + this.loginSrv.token
     });
 
-    const formData = new FormData();
-    formData.append('json', '{"nombre": "Estado"}');
+    return this.http.get(environment.URL_9415 + '/bid/rest/v1/catalogues/selector?value=state', {headers});
+  }
 
-    return this.http.post(this.url, formData, {headers});
+  generateMuni(idState: number) {
+    
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + this.loginSrv.token
+    });
+
+    return this.http.get(environment.URL_9415 + '/bid/rest/v1/catalogues/selector?value=city&filter=' + idState, {headers});
   }
 }

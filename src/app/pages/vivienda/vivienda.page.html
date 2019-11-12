@@ -1,9 +1,20 @@
 <ion-header no-border>
     <ion-toolbar color="secondary">
-            <!-- <ion-buttons slot="start">
-                    <ion-back-button text=""></ion-back-button>
-                </ion-buttons> -->
+
+        <ion-buttons *ngIf="!pService.procesoFinalizado" slot="start">
+            <ion-button (click)="irLista()">
+              <ion-icon slot="icon-only" name="arrow-round-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+
       <ion-title>Vivienda</ion-title>
+
+      <ion-buttons slot="end">
+          <ion-button style="font-size: 10px;" (click)="salirApp()">
+            Salir
+          </ion-button>
+      </ion-buttons>
+
     </ion-toolbar>
 </ion-header>
 
@@ -88,7 +99,7 @@ Volver a capturar
         </ion-radio-group>
 </ion-list>
 
-<ion-grid>
+<!-- <ion-grid>
     <ion-row>
       <ion-col>
         <ion-button class="btn_block" expand="block" fill="outline" (click)="regresar()">Regresar</ion-button>
@@ -97,19 +108,15 @@ Volver a capturar
         <ion-button class="btn_final" expand="block" (click)="sendPhoto()">Finalizar visita</ion-button>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+
+  <ion-button class="btn_final" expand="block" (click)="sendPhoto()">Finalizar visita</ion-button>
 </div>
 
-<div>
+<div *ngIf="pService.procesoFinalizado">
     <ion-button class="btn_block" expand="block" fill="outline" (click)="irLista()">Buscar direccion</ion-button>
     <br>
     <ion-button class="btn_final" expand="block" (click)="salirApp()">Salir de la aplicacion</ion-button>
 </div>
-
-<!-- <div text-center>
-    <ion-button class="btn_final" expand="block" (click)="sendPhoto()">
-        Finalizar visita
-    </ion-button>
-</div> -->
 
 </ion-content>
