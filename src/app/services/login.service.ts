@@ -51,7 +51,7 @@ export class LoginService {
 
               }, async error => {
                 this.loading.dismiss();
-                this.alertServ.alertaAction('¡Usuario no encontrado!', environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.generateToken() });
+                this.alertServ.alertaAction(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_ERROR, 'rojo', 'Reitentar', ()=> { this.generateToken() });
 
               });
   }
@@ -82,7 +82,7 @@ export class LoginService {
                   this.navCtrl.navigateRoot('clientes-lista');
 
                 } else {
-                  this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiendo');
+                  this.alertServ.alertaSimple('¡Usuario no encontrado!', 'Verifique sus datos ingresados por favor', 'Entiendo', 'rojo');
                 }
 
               }, async error => {

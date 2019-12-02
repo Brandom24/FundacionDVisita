@@ -228,7 +228,7 @@ public setDireccionServ(direccionServ: any): void {
         }
 
       } else {
-          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiedno'); 
+          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'Entiedno', 'verde'); 
       }
 
       }, async error => {
@@ -263,7 +263,7 @@ public setDireccionServ(direccionServ: any): void {
 
         } else {
           this.loading.dismiss();
-          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiedno'); 
+          this.alertCtrl.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'Entiedno', 'verde'); 
         }
 
       }, async error => {

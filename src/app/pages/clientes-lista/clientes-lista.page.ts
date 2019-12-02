@@ -92,7 +92,7 @@ export class ClientesListaPage implements OnInit {
           // console.log(this.state);
           
         } else {
-          this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiendo');
+          this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'Entiendo', 'verde');
         }
         
       }, error => {
@@ -173,11 +173,11 @@ export class ClientesListaPage implements OnInit {
         this.jsonMuni.sort();
 
       } else {
-        this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'verde', 'Entiendo');
+        this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, environment.ERROR_CONEXION_200, 'Entiendo', 'verde');
       }
     }, error => {
       this.loadingServ.dismiss();
-      this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, 'Vuelva a seleccionar el estado por favor', 'verde', 'Entiendo');
+      this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, 'Vuelva a seleccionar el estado por favor', 'Entiendo', 'verde');
     });
   }
 
@@ -209,7 +209,7 @@ export class ClientesListaPage implements OnInit {
 
     }, async error => {
       console.log(error);
-      this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, 'Ocurrio un problema al generar la lista de clientes, por favor vuela a seleccionar estado y municipio', 'verde', 'Entiendo');
+      this.alertServ.alertaSimple(environment.ERROR_PROBLEMA, 'Ocurrio un problema al generar la lista de clientes, por favor vuela a seleccionar estado y municipio', 'Entiendo', 'verde');
     });
   }
 

@@ -22,7 +22,7 @@
   <ion-item class="item_result">
     <ion-label>
       <h2>Nombre</h2>
-      <p>{{user.first_name ? user.first_name: ''}} {{user.last_name ? user.last_name: ''}}</p>
+      <p>{{user.first_name ? user.first_name: ''}} {{user.middle_name ? user.middle_name: ''}} {{user.last_name ? user.last_name: ''}}</p>
     </ion-label>
   </ion-item>
 
@@ -71,14 +71,14 @@
 <ion-item class="item_result">
 <ion-label>
 <h2>Delegación / Municipio</h2>
-<p>{{ user.colony ? user.colony: '' }}</p>
+<p>{{ user.city ? user.city: '' }}</p>
 </ion-label>
 </ion-item>
 
 <ion-item class="item_result">
 <ion-label>
 <h2>Ciudad</h2>
-<p>{{ user.colony ? user.colony: '' }}</p>
+<p>{{ user.city ? user.city: '' }}</p>
 </ion-label>
 </ion-item>
 
@@ -88,17 +88,6 @@
 <p>{{ user.state ? user.state: '' }}</p>
 </ion-label>
 </ion-item>
-
-<!-- <ion-grid>
-  <ion-row>
-    <ion-col>
-      <ion-button class="btn_line" expand="block" fill="outline" (click)="listaC()">Regresar</ion-button>
-    </ion-col>
-    <ion-col>
-      <ion-button class="btn_block" expand="block" (click)="toVisit()">Visitar</ion-button>
-    </ion-col>
-  </ion-row>
-</ion-grid> -->
 
 <ion-button class="btn_block" expand="block" (click)="toVisit()">Visitar</ion-button>
       

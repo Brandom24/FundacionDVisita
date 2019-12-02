@@ -21,6 +21,8 @@ export class DireccionesPage implements OnInit {
               private photoS: PhotosService) {
 
                 this.user = this.dataClient.getUser();
+                console.log('DireccionUser', this.user);
+                
                   
               }
 

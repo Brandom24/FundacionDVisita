@@ -1,15 +1,15 @@
 <ion-content padding>
-
-    <div @logo padding text-center>
-      <img class="style_logo" src="./assets/img/logoTrans_letra_Blanca.png">
-    </div>
-
-    <h2 text-center class="style_hs">Visita Domiciliaria</h2>
     
-    <ion-card>
-      <h3 text-center class="style_hs">Inicio de sesión</h3> 
+  <ion-card>
+
+        <ion-card-header>
+            <ion-card-title><img @logo class="logo-frd" src="./assets/img/logoTrans_letra_Blanca.png"></ion-card-title>
+        </ion-card-header>
+
+        <h2 text-center class="style_hs">Visita Domiciliaria</h2>
+        <h3 text-center class="style_hs">Inicio de sesión</h3>
+
     <ion-card-content>
-      
         <div text-center>
             <form [formGroup]="validations_form">
         
@@ -36,8 +36,8 @@
                   </ion-button>
             </form>
           </div>
-
     </ion-card-content>
+
   </ion-card> 
   
   </ion-content>
