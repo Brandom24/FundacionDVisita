@@ -31,8 +31,7 @@ export class LoginPage implements OnInit {
   constructor(private navCtrl: NavController,
               private loginSrv: LoginService,
               private _store: GuardarStorageService,
-              public fBuilder: FormBuilder) 
-              {
+              public fBuilder: FormBuilder) {
                 this._store.limpiarStorageGeneral();
                 this.loginSrv.generateToken();
                 
