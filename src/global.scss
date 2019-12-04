@@ -95,3 +95,8 @@ animation-duration: 2s;
   .style_salir {
     text-align: center;
   }
+
+  ion-content.dark-back{
+    --background: #303030;
+    --color: #fff;
+}

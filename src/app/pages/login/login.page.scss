@@ -1,7 +1,5 @@
 ion-content {
-  --background: url("../../../assets/img/fondo_Verde.png"); 
-  --background-size: cover;
-  --background-repeat: no-repeat;
+  --background-color: #303030;
 }
 
 .button-outline {
@@ -18,10 +16,10 @@ ion-content {
 }
 
 .header_logo{
-  border-bottom: 2px solid #018A5E;
+  border-bottom: 2px solid #f5851f;
   border-top: 2px solid #018a5e;
-  border-right: 2px solid #018A5E;
-  border-left: 2px solid #018A5E;
+  border-right: 2px solid #f5851f;
+  border-left: 2px solid #f5851f;
 }
 
 .datos_input {

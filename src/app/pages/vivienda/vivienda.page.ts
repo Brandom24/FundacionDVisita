@@ -33,7 +33,7 @@ export class ViviendaPage implements OnInit {
 
   constructor(private camera: Camera,
               private geolocation: Geolocation,
-              private pService: PhotosService,
+              public pService: PhotosService,
               private alertCtrl: AlertController,
               private _store: GuardarStorageService,
               private navCtrl: NavController,

@@ -39,7 +39,7 @@ export class LoginService {
 
     const params = new HttpParams()
     .set('grant_type', 'password')
-    .set('username', 'frd')
+    .set('username', 'fbe')
     .set('password', 'password');
 
     return this.http.post(environment.URL_8083 + '/uaa/oauth/token', params, {headers})
